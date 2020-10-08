@@ -17,6 +17,12 @@
     "node": ">=0.10"
   },
   "scripts": {
+    "pretest": "eslint ."
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  }
 }
