@@ -249,6 +249,7 @@
       // Returns true iff all of the specified keys exist (regardless of
       // value).
       has(keyOrList) {
+        if (!keyOrList) return undefined;
         const keys = toArray(keyOrList);
         for (let i = keys.length - 1; i >= 0; i -= 1) {
           if (!hasOwn.call(props, keys[i])) {
