@@ -1,32 +1,35 @@
 const particl = require('..');
 
-describe('.once()', () => {
+describe('.need()', () => {
   describe("when the property doesn't exist", () => {
     test('the callback does not get invoked immediately', () => {
       const p = particl();
       let calls = 0;
 
-      p.once('noSuchProp', () => {
+      p.need('noSuchProp', () => {
         calls += 1;
       });
 
       expect(calls).toBe(0);
     });
 
-    describe('even when there IS a provider available for the property', () => {
-      test('the provider does NOT get invoked', () => {
+    describe("when there's a provider available for the property", () => {
+      test('the provider gets invoked', () => {
         const p = particl();
-        let calls = 0;
+        const calls = [];
 
-        p.provide('prop', () => {
-          calls += 1;
+        p.provide('prop', (done) => {
+          calls.push('provider');
+          done('val');
         });
 
-        p.once('prop', () => {
-          calls += 1;
+        expect(calls).toEqual([]);
+
+        p.need('prop', () => {
+          calls.push('needer');
         });
 
-        expect(calls).toBe(0);
+        expect(calls).toEqual(['provider', 'needer']);
       });
     });
 
@@ -35,7 +38,7 @@ describe('.once()', () => {
         const p = particl();
         const valThatWillBeSet = { myObject: '' };
 
-        p.once('propThatWillBeSet', (val) => {
+        p.need('propThatWillBeSet', (val) => {
           expect(val).toBe(valThatWillBeSet);
           resolve();
         });
@@ -52,7 +55,7 @@ describe('.once()', () => {
       const p = particl({ a: 1 });
       let calls = 0;
 
-      p.once('a', () => {
+      p.need('a', () => {
         calls += 1;
       });
 
