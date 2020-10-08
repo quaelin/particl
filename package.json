@@ -1,0 +1,22 @@
+{
+  "name": "particl",
+  "version": "0.0.0",
+  "author": {
+    "name": "Chris Campbell",
+    "url": "https://github.com/quaelin"
+  },
+  "bugs": {
+    "url": "https://github.com/quaelin/particl/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/quaelin/particl"
+  },
+  "main": "./particl.js",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+  },
+  "license": "MIT"
+}
