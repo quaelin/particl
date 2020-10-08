@@ -40,12 +40,13 @@
 
   // Property getter
   function get(nucleus, keyOrList, func) {
+    const values = [];
+    const result = { values };
+    if (!keyOrList) return result;
     const isList = isArray(keyOrList);
     const keys = isList ? keyOrList : [keyOrList];
-    const values = [];
     const { props } = nucleus;
     const missing = {};
-    const result = { values };
     for (let i = keys.length - 1; i >= 0; i -= 1) {
       const key = keys[i];
       if (!hasOwn.call(props, key)) {
@@ -241,6 +242,7 @@
       get(keyOrList, func) {
         const result = get(nucleus, keyOrList, func);
         if (func) return result;
+        if (!keyOrList) return undefined;
         return typeof keyOrList === 'string' ? result.values[0] : result.values;
       },
 

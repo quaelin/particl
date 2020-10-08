@@ -18,7 +18,7 @@
   },
   "scripts": {
     "pretest": "eslint .",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "license": "MIT",
   "devDependencies": {
