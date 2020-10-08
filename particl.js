@@ -1,16 +1,16 @@
 //
-// atom.js
-// https://github.com/quaelin/atom
+// particl.js
+// https://github.com/quaelin/particl
 // Author: Chris Campbell (@quaelin)
-// License: BSD
+// License: MIT
 //
-(function (undef) {
+(function () {
 	'use strict';
 
 	var
-		atom,
-		name = 'atom',
-		VERSION = '0.5.6',
+		particl,
+		name = 'particl',
+		VERSION = '0.0.0',
 
 		ObjProto = Object.prototype,
 		hasOwn = ObjProto.hasOwnProperty,
@@ -153,7 +153,7 @@
 
 
 	// Return an instance.
-	atom = root[name] = function () {
+	particl = root[name] = function () {
 		var
 			args = slice.call(arguments, 0),
 			nucleus = {},
@@ -196,7 +196,7 @@
 			},
 
 			// Remove references to all properties and listeners.  This releases
-			// memory, and effective stops the atom from working.
+			// memory, and effective stops the particl from working.
 			destroy: function () {
 				delete nucleus.props;
 				delete nucleus.needs;
@@ -221,12 +221,12 @@
 			},
 
 			// Establish two-way binding between a key or list of keys for two
-			// different atoms, so that changing a property on either atom will
+			// different particl, so that changing a property on either particl will
 			// propagate to the other.  If a map is provided for `keyOrListOrMap`,
-			// properties on this atom may be bound to differently named properties
-			// on `otherAtom`.  Note that entangled properties will not actually be
+			// properties on this particl may be bound to differently named properties
+			// on `otherParticl`.  Note that entangled properties will not actually be
 			// synchronized until the first change *after* entanglement.
-			entangle: function (otherAtom, keyOrListOrMap) {
+			entangle: function (otherParticl, keyOrListOrMap) {
 				var
 					isList = isArray(keyOrListOrMap),
 					isMap = !isList && typeof keyOrListOrMap === typeObj,
@@ -249,9 +249,9 @@
 				me.each(keys, function (key) {
 					var otherKey = map[key];
 					me.on(key, function (value) {
-						otherAtom.set(otherKey, value);
+						otherParticl.set(otherKey, value);
 					});
-					otherAtom.on(otherKey, function (value) {
+					otherParticl.on(otherKey, function (value) {
 						me.set(key, value);
 					});
 				});
@@ -289,7 +289,7 @@
 				return keys;
 			},
 
-			// Add arbitrary properties to this atom's interface.
+			// Add arbitrary properties to this particl's interface.
 			mixin: function (obj) {
 				for (var p in obj) {
 					if (hasOwn.call(obj, p)) {
@@ -418,14 +418,11 @@
 		return me;
 	};
 
-	atom.VERSION = VERSION;
+	particl.VERSION = VERSION;
 
-	// For backwards compatibility with < 0.4.0
-	atom.create = atom;
-
-	atom.noConflict = function () {
-		if (root[name] === atom) {
-			root[name] = had ? prev : undef;
+	particl.noConflict = function () {
+		if (root[name] === particl) {
+			root[name] = had ? prev : undefined;
 			if (!had) {
 				try {
 					delete root[name];
@@ -433,10 +430,10 @@
 				}
 			}
 		}
-		return atom;
+		return particl;
 	};
 
 	if (typeof module !== typeUndef && module.exports) {
-		module.exports = atom;
+		module.exports = particl;
 	}
 }());
