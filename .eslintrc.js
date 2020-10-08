@@ -1,6 +1,12 @@
 module.exports = {
   extends: ['eslint-config-airbnb-base'],
 
+  plugins: ['jest'],
+
+  env: {
+    'jest/globals': true,
+  },
+
   rules: {
     'no-multi-assign': 'off',
     'no-param-reassign': 'warn',

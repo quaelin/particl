@@ -17,12 +17,15 @@
     "node": ">=0.10"
   },
   "scripts": {
-    "pretest": "eslint ."
+    "pretest": "eslint .",
+    "test": "jest"
   },
   "license": "MIT",
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.1"
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "jest": "^26.5.2"
   }
 }
