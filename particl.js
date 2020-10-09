@@ -146,39 +146,8 @@
     let needs = nucleus.needs = {};
     let providers = nucleus.providers = {};
     let listeners = nucleus.listeners = [];
-    let q = [];
-
-    // Execute the next function in the async queue.
-    function doNext() {
-      if (q) {
-        q.pending = q.next = (!q.next && q.length)
-          ? q.shift()
-          : q.next;
-        q.args = slice.call(arguments, 0);
-        if (q.pending) {
-          q.next = 0;
-          q.pending.apply({}, [preventMultiCall(doNext)].concat(q.args));
-        }
-      }
-    }
 
     const me = {
-
-      // Add a function or functions to the async queue.  Functions added
-      // thusly must call their first arg as a callback when done.  Any args
-      // provided to the callback will be passed in to the next function in
-      // the queue.
-      chain() {
-        if (q) {
-          for (let i = 0, len = arguments.length; i < len; i += 1) {
-            q.push(arguments[i]);
-            if (!q.pending) {
-              doNext.apply({}, q.args || []);
-            }
-          }
-        }
-        return me;
-      },
 
       // Remove references to all properties and listeners.  This releases
       // memory, and effective stops the particl from working.
@@ -187,10 +156,7 @@
         delete nucleus.needs;
         delete nucleus.providers;
         delete nucleus.listeners;
-        while (q.length) {
-          q.pop();
-        }
-        nucleus = props = needs = providers = listeners = q = q.pending = q.next = q.args = 0;
+        nucleus = props = needs = providers = listeners = 0;
       },
 
       // Call `func` on each of the specified keys.  The key is provided as
@@ -206,7 +172,7 @@
       },
 
       // Establish two-way binding between a key or list of keys for two
-      // different particl, so that changing a property on either particl will
+      // different particls, so that changing a property on either particl will
       // propagate to the other.  If a map is provided for `keyOrListOrMap`,
       // properties on this particl may be bound to differently named properties
       // on `otherParticl`.  Note that entangled properties will not actually be
@@ -240,9 +206,9 @@
       // Get current values for the specified keys.  If `func` is provided,
       // it will be called with the values as args.
       get(keyOrList, func) {
+        if (!keyOrList) return undefined;
         const result = get(nucleus, keyOrList, func);
         if (func) return result;
-        if (!keyOrList) return undefined;
         return typeof keyOrList === 'string' ? result.values[0] : result.values;
       },
 
@@ -308,10 +274,10 @@
       // values of all keys will be provided as args to the function.  The
       // function will automatically be unbound after being called the first
       // time, so it is guaranteed to be called no more than once.
-      next(keyOrList, cb) {
+      next(keyOrList, func) {
         listeners.unshift({
           keys: toArray(keyOrList),
-          cb,
+          cb: func,
           calls: 1,
         });
         return me;
