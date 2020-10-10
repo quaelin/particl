@@ -284,10 +284,10 @@
       },
 
       // Unregister a listener `func` that was previously registered using
-      // `on()`, `bind()`, `need()`, `next()` or `once()`.  `keyOrList` is
-      // optional; if provided, it will selectively remove the listener only
-      // for the specified combination of properties.
-      off(keyOrList, func) { // alias: `unbind`
+      // `need()`, `next()`, `on()` or `once()`.  `keyOrList` is  optional; if
+      // provided, it will selectively remove the listener only for the
+      // specified combination of properties.
+      off(keyOrList, func) {
         if (arguments.length === 1) {
           func = keyOrList;
           keyOrList = 0;
@@ -303,7 +303,7 @@
 
       // Call `func` whenever any of the specified keys change.  The values
       // of the keys will be provided as args to func.
-      on(keyOrList, func) { // alias: `bind`
+      on(keyOrList, func) {
         listeners.unshift({
           keys: toArray(keyOrList),
           cb: func,
@@ -355,9 +355,6 @@
         return me;
       },
     };
-
-    me.bind = me.on;
-    me.unbind = me.off;
 
     if (args.length) {
       me.set(...args);
