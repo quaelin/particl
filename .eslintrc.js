@@ -3,11 +3,16 @@ module.exports = {
 
   plugins: ['jest'],
 
-  env: {
-    'jest/globals': true,
-  },
+  env: { 'jest/globals': true },
 
   rules: {
+    'comma-dangle': ['error', {
+      arrays: 'always-multiline',
+      objects: 'always-multiline',
+      imports: 'always-multiline',
+      exports: 'always-multiline',
+      functions: 'never',
+    }],
     'no-multi-assign': 'off',
     'no-param-reassign': 'warn',
     'no-restricted-syntax': 'warn',

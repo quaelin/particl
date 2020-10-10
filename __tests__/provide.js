@@ -7,6 +7,32 @@ describe('.provide()', () => {
     p = particl();
   });
 
+  describe('different ways to provide', () => {
+    test('call a callback', async () => {
+      p.provide('a', (done) => {
+        done(1);
+      });
+      const a = await p.need('a');
+      expect(a).toBe(1);
+    });
+
+    test('return a promise', async () => {
+      p.provide('b', () => new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(2);
+        }, 0);
+      }));
+      const b = await p.need('b');
+      expect(b).toBe(2);
+    });
+
+    test('return a value', async () => {
+      p.provide('c', () => 3);
+      const c = await p.need('c');
+      expect(c).toBe(3);
+    });
+  });
+
   describe('when a provider is registered', () => {
     test('a call to "need" will trigger it', () => {
       let triggered = false;
@@ -32,7 +58,7 @@ describe('.provide()', () => {
       let fulfilledValue;
 
       p.need('a', (val) => { fulfilledValue = val; });
-      p.provide('a', (done) => done('val'));
+      p.provide('a', () => 'val');
 
       expect(fulfilledValue).toBe('val');
     });

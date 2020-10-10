@@ -8,7 +8,7 @@ describe('.explode()', () => {
   });
 
   test('makes the whole api available as individual functions', () => {
-    p.explode(({ get, set, has, on, need, provide }) => {
+    p.explode(async ({ get, set, has, on, need, provide }) => {
       set({ collector: [], count: 0 });
 
       on('track', (val) => {
@@ -24,10 +24,10 @@ describe('.explode()', () => {
         set('track', { heyWeGotSomeData: data });
       });
 
-      provide('data', (done) => { done('Channing Datum'); });
+      provide('data', () => 'Channing Datum');
 
       if (!has('data')) {
-        need('data');
+        await need('data');
       }
 
       expect(get('collector')).toEqual([

@@ -37,6 +37,16 @@
     }
     return true;
   }
+  function isPromise(obj) {
+    return obj && typeof obj === 'object' && typeof obj.then === 'function';
+  }
+  function zipObject(props, vals) {
+    const obj = {};
+    for (let i = 0; i < props.length && i < vals.length; i += 1) {
+      obj[props[i]] = vals[i];
+    }
+    return obj;
+  }
 
   // Property getter
   function get(nucleus, keyOrList) {
@@ -113,19 +123,23 @@
   // Wrapper to prevent a callback from getting invoked more than once.
   function preventMultiCall(callback) {
     let ran;
-    return function () {
+    return (...args) => {
       if (!ran) {
         ran = 1;
-        callback.apply(this, arguments);
+        callback(...args);
       }
     };
   }
 
   // Helper function for setting up providers.
   function provide(nucleus, key, provider) {
-    provider(preventMultiCall((result) => {
-      set(nucleus, key, result);
-    }));
+    const fulfill = preventMultiCall((val) => {
+      set(nucleus, key, val);
+    });
+    const rtval = provider(fulfill);
+    if (rtval === undefined) return;
+    if (isPromise(rtval)) rtval.then(fulfill);
+    else fulfill(rtval);
   }
 
   // Determine whether two keys (or sets of keys) are equivalent.
@@ -217,11 +231,7 @@
         const keys = firstArgIsFunc ? api.keys() : toArray(keyOrListOrFunc);
         const result = get(nucleus, keys);
         if (firstArgIsFunc) {
-          const resultMap = {};
-          for (let i = keys.length - 1; i >= 0; i -= 1) {
-            resultMap[keys[i]] = result.values[i];
-          }
-          keyOrListOrFunc(resultMap);
+          keyOrListOrFunc(zipObject(keys, result.values));
           return api;
         }
         if (func) {
@@ -283,10 +293,8 @@
             needs[key] = true;
           }
         }
-        if (func) {
-          api.once(keys, func);
-        }
-        return api;
+        if (func) return api.once(keyOrList, func);
+        return api.once(keyOrList);
       },
 
       // Call `func` whenever any of the specified keys is next changed.  The
@@ -338,17 +346,29 @@
       once(keyOrList, func) {
         const keys = toArray(keyOrList);
         const { values, missing } = get(nucleus, keys);
-        if (!missing) {
-          func.apply({}, values);
-        } else {
-          listeners.unshift({ keys, cb: func, missing, calls: 1 });
+        if (func) {
+          if (missing) {
+            listeners.unshift({ keys, cb: func, missing, calls: 1 });
+          } else {
+            func(...values);
+          }
+          return api;
         }
-        return api;
+        return new Promise((wrappedResolve) => {
+          const resolve = (vals) => wrappedResolve(
+            typeof keyOrList === 'string' ? vals[0] : zipObject(keys, vals)
+          );
+          if (missing) {
+            listeners.unshift({ keys, cb: (...params) => resolve(params), missing, calls: 1 });
+          } else {
+            resolve(values);
+          }
+        });
       },
 
       // Register a provider for a particular key.  The provider `func` is a
       // function that will be called if there is a need to create the key.
-      // It must call its first arg as a callback, with the value.  Provider
+      // It must return a promise, a value, or call its callback.  Provider
       // functions will be called at most once.
       provide(key, func) {
         if (needs[key]) {
