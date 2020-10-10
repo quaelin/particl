@@ -19,6 +19,10 @@
   // Convenience methods
   const { slice } = Array.prototype;
   const isArray = Array.isArray || ((obj) => ObjProto.toString.call(obj) === '[object Array]');
+  const toArray = (obj) => (isArray(obj) ? obj : [obj]);
+  const isObject = (obj) => obj && typeof obj === 'object';
+  const isFunction = (f) => typeof f === 'function';
+  const isPromise = (obj) => isObject(obj) && isFunction(obj.then);
 
   function inArray(arr, value) {
     for (let i = arr.length - 1; i >= 0; i -= 1) {
@@ -28,7 +32,6 @@
     }
     return false;
   }
-  const toArray = (obj) => (isArray(obj) ? obj : [obj]);
   function isEmpty(obj) {
     for (const p in obj) { // eslint-disable-line no-restricted-syntax
       if (hasOwn.call(obj, p)) {
@@ -36,9 +39,6 @@
       }
     }
     return true;
-  }
-  function isPromise(obj) {
-    return obj && typeof obj === 'object' && typeof obj.then === 'function';
   }
   function zipObject(props, vals) {
     const obj = {};
@@ -88,7 +88,7 @@
     const listenersCopy = [].concat(listeners);
     const had = hasOwn.call(props, key);
     const oldValue = props[key];
-    const isObj = value && typeof value === 'object';
+    const isObj = isObject(value);
     props[key] = value;
     if (!had || oldValue !== value || (isObj && !inArray(objStack, value))) {
       if (isObj) {
@@ -193,7 +193,7 @@
       // synchronized until the first change *after* entanglement.
       entangle(otherParticl, keyOrListOrMap) {
         const isList = isArray(keyOrListOrMap);
-        const isMap = !isList && typeof keyOrListOrMap === 'object';
+        const isMap = !isList && isObject(keyOrListOrMap);
         // eslint-disable-next-line no-nested-ternary
         const keys = isList ? keyOrListOrMap : (isMap ? [] : [keyOrListOrMap]);
         const map = isMap ? keyOrListOrMap : {};
@@ -382,7 +382,7 @@
       // Set value for a key, or if `keyOrMap` is an object then set all the
       // keys' corresponding values.
       set(keyOrMap, value) {
-        if (typeof keyOrMap === 'object') {
+        if (isObject(keyOrMap)) {
           for (const key in keyOrMap) { // eslint-disable-line no-restricted-syntax
             if (hasOwn.call(keyOrMap, key)) {
               set(nucleus, key, keyOrMap[key]);
@@ -397,7 +397,7 @@
 
     if (args.length) {
       const firstArg = args[0];
-      if (typeof firstArg === 'function') {
+      if (isFunction(firstArg)) {
         firstArg(api.explode());
       } else {
         api.set(...args);
