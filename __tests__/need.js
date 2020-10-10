@@ -1,21 +1,25 @@
 const particl = require('..');
 
 describe('.need()', () => {
+  let p;
+
+  beforeEach(() => {
+    p = particl();
+  });
+
   describe("when the property doesn't exist", () => {
     test('the callback does not get invoked immediately', () => {
-      const p = particl();
-      let calls = 0;
+      let invoked = false;
 
       p.need('noSuchProp', () => {
-        calls += 1;
+        invoked = true;
       });
 
-      expect(calls).toBe(0);
+      expect(invoked).toBe(false);
     });
 
     describe("when there's a provider available for the property", () => {
       test('the provider gets invoked, and the need gets fulfilled', () => {
-        const p = particl();
         const calls = [];
 
         p.provide('prop', (done) => {
@@ -36,8 +40,7 @@ describe('.need()', () => {
 
     describe('when the prop gets set later', () => {
       test('the callback gets invoked', () => new Promise((resolve) => {
-        const p = particl();
-        const valThatWillBeSet = { myObject: '' };
+        const valThatWillBeSet = { prop: 'maybe' };
 
         p.need('propThatWillBeSet', (val) => {
           expect(val).toBe(valThatWillBeSet);
@@ -53,14 +56,14 @@ describe('.need()', () => {
 
   describe('when the property does already exist', () => {
     test('the callback gets invoked immediately', () => {
-      const p = particl({ a: 1 });
-      let calls = 0;
+      p = particl({ a: 1 });
+      let invoked = false;
 
       p.need('a', () => {
-        calls += 1;
+        invoked = true;
       });
 
-      expect(calls).toBe(1);
+      expect(invoked).toBe(true);
     });
   });
 });

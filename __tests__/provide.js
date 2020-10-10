@@ -1,9 +1,14 @@
 const particl = require('..');
 
 describe('.provide()', () => {
+  let p;
+
+  beforeEach(() => {
+    p = particl();
+  });
+
   describe('when a provider is registered', () => {
     test('a call to "need" will trigger it', () => {
-      const p = particl();
       let triggered = false;
 
       p.provide('a', () => { triggered = true; });
@@ -13,7 +18,6 @@ describe('.provide()', () => {
     });
 
     test('a call to "once" will NOT trigger it', () => {
-      const p = particl();
       let triggered = false;
 
       p.provide('a', () => { triggered = true; });
@@ -23,9 +27,8 @@ describe('.provide()', () => {
     });
   });
 
-  describe('when a need is regsitered first', () => {
-    describe('a call to provide will fulfill it', () => {
-      const p = particl();
+  describe('when a need is registered first', () => {
+    test('a call to provide will fulfill it', () => {
       let fulfilledValue;
 
       p.need('a', (val) => { fulfilledValue = val; });
@@ -37,7 +40,6 @@ describe('.provide()', () => {
 
   describe('when more than one provider is registered', () => {
     test('only the first gets invoked', () => {
-      const p = particl();
       let firstInvoked = false;
       let secondInvoked = false;
 
@@ -52,7 +54,6 @@ describe('.provide()', () => {
 
   describe('when a provider provides a value', () => {
     test('it gets passed to the needs callback', () => {
-      const p = particl();
       let receivedVal;
 
       p.provide('a', (done) => { done('val'); });
