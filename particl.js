@@ -23,6 +23,7 @@
   const isObject = (obj) => obj && typeof obj === 'object';
   const isFunction = (f) => typeof f === 'function';
   const isPromise = (obj) => isObject(obj) && isFunction(obj.then);
+  const isString = (str) => typeof str === 'string';
 
   function inArray(arr, value) {
     for (let i = arr.length - 1; i >= 0; i -= 1) {
@@ -302,12 +303,18 @@
       // function will automatically be unbound after being called the first
       // time, so it is guaranteed to be called no more than once.
       next(keyOrList, func) {
-        listeners.unshift({
-          keys: toArray(keyOrList),
-          cb: func,
-          calls: 1,
+        const keys = toArray(keyOrList);
+        if (func) {
+          listeners.unshift({ keys, cb: func, calls: 1 });
+          return api;
+        }
+        return new Promise((resolve) => {
+          listeners.unshift({
+            keys,
+            cb: (...vals) => resolve(isString(keyOrList) ? vals[0] : zipObject(keys, vals)),
+            calls: 1,
+          });
         });
-        return api;
       },
 
       // Unregister a listener `func` that was previously registered using
@@ -356,7 +363,7 @@
         }
         return new Promise((wrappedResolve) => {
           const resolve = (vals) => wrappedResolve(
-            typeof keyOrList === 'string' ? vals[0] : zipObject(keys, vals)
+            isString(keyOrList) ? vals[0] : zipObject(keys, vals)
           );
           if (missing) {
             listeners.unshift({ keys, cb: (...params) => resolve(params), missing, calls: 1 });
