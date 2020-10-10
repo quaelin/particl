@@ -147,7 +147,7 @@
     let providers = nucleus.providers = {};
     let listeners = nucleus.listeners = [];
 
-    const me = {
+    const api = {
 
       // Remove references to all properties and listeners.  This releases
       // memory, and effective stops the particl from working.
@@ -166,9 +166,9 @@
         const len = keys.length;
         for (let i = 0; i < len; i += 1) {
           const key = keys[i];
-          func(key, me.get(key));
+          func(key, api.get(key));
         }
-        return me;
+        return api;
       },
 
       // Establish two-way binding between a key or list of keys for two
@@ -195,12 +195,17 @@
             map[key] = key;
           }
         }
-        me.each(keys, (key) => {
+        api.each(keys, (key) => {
           const otherKey = map[key];
-          me.on(key, (value) => { otherParticl.set(otherKey, value); });
-          otherParticl.on(otherKey, (value) => { me.set(key, value); });
+          api.on(key, (value) => { otherParticl.set(otherKey, value); });
+          otherParticl.on(otherKey, (value) => { api.set(key, value); });
         });
-        return me;
+        return api;
+      },
+
+      explode(func) {
+        func(api);
+        return api;
       },
 
       // Get current values for the specified keys.  If `func` is provided,
@@ -209,7 +214,7 @@
         if (!keyOrListOrFunc) return undefined;
         const firstArgType = typeof keyOrListOrFunc;
         const firstArgIsFunc = firstArgType === 'function';
-        const keys = firstArgIsFunc ? me.keys() : toArray(keyOrListOrFunc);
+        const keys = firstArgIsFunc ? api.keys() : toArray(keyOrListOrFunc);
         const result = get(nucleus, keys);
         if (firstArgIsFunc) {
           const resultMap = {};
@@ -217,11 +222,11 @@
             resultMap[keys[i]] = result.values[i];
           }
           keyOrListOrFunc(resultMap);
-          return me;
+          return api;
         }
         if (func) {
           func(...result.values);
-          return me;
+          return api;
         }
         return firstArgType === 'string' ? result.values[0] : result.values;
       },
@@ -254,10 +259,10 @@
       mixin(obj) {
         for (const p in obj) { // eslint-disable-line no-restricted-syntax
           if (hasOwn.call(obj, p)) {
-            me[p] = obj[p];
+            api[p] = obj[p];
           }
         }
-        return me;
+        return api;
       },
 
       // Call `func` as soon as all of the specified keys have been set.  If
@@ -279,9 +284,9 @@
           }
         }
         if (func) {
-          me.once(keys, func);
+          api.once(keys, func);
         }
-        return me;
+        return api;
       },
 
       // Call `func` whenever any of the specified keys is next changed.  The
@@ -294,7 +299,7 @@
           cb: func,
           calls: 1,
         });
-        return me;
+        return api;
       },
 
       // Unregister a listener `func` that was previously registered using
@@ -312,7 +317,7 @@
             listeners.splice(i, 1);
           }
         }
-        return me;
+        return api;
       },
 
       // Call `func` whenever any of the specified keys change.  The values
@@ -323,7 +328,7 @@
           cb: func,
           calls: Infinity,
         });
-        return me;
+        return api;
       },
 
       // Call `func` as soon as all of the specified keys have been set.  If
@@ -338,7 +343,7 @@
         } else {
           listeners.unshift({ keys, cb: func, missing, calls: 1 });
         }
-        return me;
+        return api;
       },
 
       // Register a provider for a particular key.  The provider `func` is a
@@ -351,7 +356,7 @@
         } else if (!providers[key]) {
           providers[key] = func;
         }
-        return me;
+        return api;
       },
 
       // Set value for a key, or if `keyOrMap` is an object then set all the
@@ -366,15 +371,20 @@
         } else {
           set(nucleus, keyOrMap, value);
         }
-        return me;
+        return api;
       },
     };
 
     if (args.length) {
-      me.set(...args);
+      const firstArg = args[0];
+      if (typeof firstArg === 'function') {
+        firstArg(api.explode());
+      } else {
+        api.set(...args);
+      }
     }
 
-    return me;
+    return api;
   };
 
   particl.VERSION = VERSION;
