@@ -39,7 +39,7 @@
   }
 
   // Property getter
-  function get(nucleus, keyOrList, func) {
+  function get(nucleus, keyOrList) {
     const values = [];
     const result = { values };
     if (!keyOrList) return result;
@@ -55,7 +55,7 @@
       }
       values.unshift(props[key]);
     }
-    return func ? func.apply({}, values) : result;
+    return result;
   }
 
   // Helper to remove an exausted listener from the listeners array
@@ -205,11 +205,25 @@
 
       // Get current values for the specified keys.  If `func` is provided,
       // it will be called with the values as args.
-      get(keyOrList, func) {
-        if (!keyOrList) return undefined;
-        const result = get(nucleus, keyOrList, func);
-        if (func) return result;
-        return typeof keyOrList === 'string' ? result.values[0] : result.values;
+      get(keyOrListOrFunc, func) {
+        if (!keyOrListOrFunc) return undefined;
+        const firstArgType = typeof keyOrListOrFunc;
+        const firstArgIsFunc = firstArgType === 'function';
+        const keys = firstArgIsFunc ? me.keys() : toArray(keyOrListOrFunc);
+        const result = get(nucleus, keys);
+        if (firstArgIsFunc) {
+          const resultMap = {};
+          for (let i = keys.length - 1; i >= 0; i -= 1) {
+            resultMap[keys[i]] = result.values[i];
+          }
+          keyOrListOrFunc(resultMap);
+          return me;
+        }
+        if (func) {
+          func(...result.values);
+          return me;
+        }
+        return firstArgType === 'string' ? result.values[0] : result.values;
       },
 
       // Returns true iff all of the specified keys exist (regardless of

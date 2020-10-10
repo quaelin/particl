@@ -11,7 +11,7 @@ describe('.get()', () => {
     expect(p.get()).toBe(undefined);
   });
 
-  describe(".get('string')", () => {
+  describe('.get(string)', () => {
     test("when a property doesn't exist, it returns undefined", () => {
       expect(p.get('noSuchProp')).toBe(undefined);
     });
@@ -24,14 +24,30 @@ describe('.get()', () => {
     });
   });
 
+  describe('.get(string, func)', () => {
+    test('result is passed in to the callback func', () => {
+      p = particl({ a: 'Z' });
+
+      p.get('a', (a) => {
+        expect(a).toBe('Z');
+      });
+    });
+
+    test('returns the particl instance for method chaining', () => {
+      expect(p.get('a', () => null)).toBe(p);
+    });
+  });
+
   describe('.get(array)', () => {
-    test('when fetching an array of properties, it returns an array of values', () => {
+    test('returns an array of values', () => {
       p = particl({ a: 1, b: 2, c: 3 });
 
       expect(p.get(['a', 'b', 'c'])).toEqual([1, 2, 3]);
     });
+  });
 
-    test('when a callback is provided, the results are passed in to the callback', () => {
+  describe('.get(array, func)', () => {
+    test('results are passed in to the callback func as arguments', () => {
       p = particl({ a: 1, b: 2, c: 3 });
 
       p.get(['a', 'b', 'c'], (a, b, c) => {
@@ -39,6 +55,25 @@ describe('.get()', () => {
         expect(b).toBe(2);
         expect(c).toBe(3);
       });
+    });
+
+    test('returns the particl instance for method chaining', () => {
+      expect(p.get(['a'], () => null)).toBe(p);
+    });
+  });
+
+  describe('.get(func)', () => {
+    test('immediately invokes func with a hash of all current property values', () => {
+      p = particl({ x: 7, y: 8 });
+      let got;
+      p.get(({ x, y, z }) => {
+        got = { x, y, z };
+      });
+      expect(got).toEqual({ x: 7, y: 8, z: undefined });
+    });
+
+    test('returns the particl instance for method chaining', () => {
+      expect(p.get(() => null)).toBe(p);
     });
   });
 });
