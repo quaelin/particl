@@ -14,7 +14,7 @@ describe('.need()', () => {
     });
 
     describe("when there's a provider available for the property", () => {
-      test('the provider gets invoked', () => {
+      test('the provider gets invoked, and the need gets fulfilled', () => {
         const p = particl();
         const calls = [];
 
@@ -25,8 +25,9 @@ describe('.need()', () => {
 
         expect(calls).toEqual([]);
 
-        p.need('prop', () => {
+        p.need('prop', (val) => {
           calls.push('needer');
+          expect(val).toBe('val');
         });
 
         expect(calls).toEqual(['provider', 'needer']);
@@ -50,7 +51,7 @@ describe('.need()', () => {
     });
   });
 
-  describe('when the property does alreay exist', () => {
+  describe('when the property does already exist', () => {
     test('the callback gets invoked immediately', () => {
       const p = particl({ a: 1 });
       let calls = 0;
