@@ -299,9 +299,8 @@
       },
 
       // Call `func` whenever any of the specified keys is next changed.  The
-      // values of all keys will be provided as args to the function.  The
-      // function will automatically be unbound after being called the first
-      // time, so it is guaranteed to be called no more than once.
+      // values of all keys will be provided as args to the function.  Or omit
+      // the `func` argument and it will return a promise.
       next(keyOrList, func) {
         const keys = toArray(keyOrList);
         if (func) {
