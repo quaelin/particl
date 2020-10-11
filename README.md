@@ -140,3 +140,26 @@ Otherwise, `.need()` behaves just like `.once()`.
 		});
 	});
 ```
+
+### Exploded view
+
+If you call `.explode()` or else just pass in a function as the first argument
+to the constructor, it will be called with the entire api object, allowing you
+to easily select just individual methods you want with argument destructuring:
+```js
+  particl(async ({ get, set, need, provide, on }) => {
+    set({ logDefaults: { appName: 'myApp' }});
+
+    provide('data', () => fetch('${baseUrl}/api/data'));
+
+    on('log', (event) => {
+      console.log({
+        ...get('logDefaults'),
+        ...event,
+        timestamp: Date.now(),
+      });
+    });
+
+    ...
+  });
+```
