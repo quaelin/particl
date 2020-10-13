@@ -70,8 +70,7 @@ read and write values of any type:
   });
 ```
 
-If an object is passed in to the constructor, it will serve to initialize
-properties:
+If an object is passed in to the constructor, it will initialize properties:
 ```js
   p = particl({ p: 3.141592653, r: 5 });
 ```
@@ -115,7 +114,7 @@ or
 
 Many particl methods can work with more than one property at a time.
 ```js
-  p.once(['app', 'user'], function (app, user) {
+  p.once(['app', 'user'], (app, user) => {
     alert(`Welcome to ${app.name}, ${user.name}!`);
   });
 ```
@@ -162,8 +161,7 @@ You can register a provider for a property.
     provide('privacyPolicy', () => fetch(`${baseUrl}/privacy.txt`));
 
     on('clickPrivacy', async () => {
-      const policyText = await need('privacyPolicy');
-      element.innerText = text;
+      element.innerText = await need('privacyPolicy');
     });
   });
 ```
@@ -179,7 +177,7 @@ If you call `explode()` or else just pass in a function as the first argument
 to the constructor, it will be called with the entire api object, allowing you
 to easily select just individual methods you want with argument destructuring:
 ```js
-  particl(async ({ get, set, need, provide, on }) => {
+  particl(async ({ get, need, on, provide, set }) => {
     set({ logDefaults: { appName: 'myApp' }});
 
     on('log', (event) => {
