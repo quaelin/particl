@@ -404,7 +404,7 @@
     if (args.length) {
       const firstArg = args[0];
       if (isFunction(firstArg)) {
-        firstArg(api.explode());
+        firstArg(api);
       } else {
         api.set(...args);
       }
