@@ -1,6 +1,7 @@
 # particl
 
-A small, easy to use JavaScript module that provides asynchronous control flow, event/property listeners, barriers, and more.
+A small, easy to use JavaScript module that provides asynchronous control flow,
+event/property listeners, barriers, and more.
 
 `particl` is the spiritual successor to [atom](https://github.com/quaelin/atom),
 using some more modern language features and adding Promise support and more
@@ -9,8 +10,8 @@ thorough tests.
 ## Features
 
 * Small, no dependencies
-* Enables programming patterns that reduce the need for deeply nested callbacks,
-  and even ones that would be cumbersome to implement clearly with Promises.
+* Allows you to _clearly_ code using a variety of async control flow patterns,
+  even ones that would be cumbersome to implement clearly with just Promises.
 
 ## Install
 ```
@@ -21,7 +22,9 @@ thorough tests.
 
 ### Constructor
 
-There are three main ways to invoke the `particl()` constructor.  Here's with no arguments:
+There are three main ways to invoke the `particl()` constructor.  Here's with no
+arguments:
+
 ```js
   // no arguments
   let p = particl();
@@ -40,6 +43,7 @@ first argument to the callback, so that you can easily select the portion of the
 api you want to interact with using object destructuring.
 
 So the following are identical:
+
 ```js
   const p = particl();
   p.set('foo', 'bar');
@@ -55,6 +59,7 @@ So the following are identical:
 
 A particl has properties.  The `get()` and `set()` methods may be employed to
 read and write values of any type:
+
 ```js
   particl(({ get, set }) => {
 
@@ -71,6 +76,7 @@ read and write values of any type:
 ```
 
 If an object is passed in to the constructor, it will initialize properties:
+
 ```js
   p = particl({ p: 3.141592653, r: 5 });
 ```
@@ -99,6 +105,7 @@ Listeners may be attached to particls in a variety of ways.
 
 To be notified as soon as a property is set, use the `once()` method.  The
 callback will be called immediately if the property is already set.
+
 ```js
   p.once('user', (user) => {
     alert(`Welcome, ${user.name}!`);
@@ -106,6 +113,7 @@ callback will be called immediately if the property is already set.
 ```
 
 or
+
 ```js
   p.once('user').then((user) => {
     alert(`Welcome, ${user.name}!`);
@@ -113,6 +121,7 @@ or
 ```
 
 Many particl methods can work with more than one property at a time.
+
 ```js
   p.once(['app', 'user'], (app, user) => {
     alert(`Welcome to ${app.name}, ${user.name}!`);
@@ -120,6 +129,7 @@ Many particl methods can work with more than one property at a time.
 ```
 
 or
+
 ```js
   p.once(['app', 'user']).then(({ app, user }) => {
     alert(`Welcome to ${app.name}, ${user.name}!`);
@@ -128,6 +138,7 @@ or
 
 When you just want to know about the next change, even if the property is
 already set, use `next()`.
+
 ```js
   p.next('click', (click) => {
     alert(`Are you done clicking on ${click.button} yet?`);
@@ -135,6 +146,7 @@ already set, use `next()`.
 ```
 
 To watch for any future changes to a property, use the `on()` method.
+
 ```js
   function myErrorHandler(error) {
     console.log(`There was a grievous calamity of code in ${p.get('module')}`);
@@ -148,6 +160,7 @@ only trigger listeners if the value is *different*.  On the other hand, setting
 an array or object value will *always* trigger listeners.
 
 You can unregister any listener using `off()`.
+
 ```js
   p.off(myErrorHandler);
 ```
@@ -173,9 +186,10 @@ Otherwise, `need()` behaves just like `once()`.
 
 ### Exploded view
 
-If you call `explode()` or else just pass in a function as the first argument
-to the constructor, it will be called with the entire api object, allowing you
-to easily select just individual methods you want with argument destructuring:
+If you call `explode(func)` or else just pass in a function to the constructor,
+it will be called with the entire api object, allowing you to easily select just
+individual methods you want with argument destructuring:
+
 ```js
   particl(async ({ get, need, on, provide, set }) => {
     set({ logDefaults: { appName: 'myApp' }});
