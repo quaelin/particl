@@ -22,8 +22,7 @@ thorough tests.
 
 ### Constructor
 
-There are three main ways to invoke the `particl()` constructor.  Here's with no
-arguments:
+You can call the `particl()` constructor without arguments, but it's also possible to pass in initial properties as an object, and/or a callback function which will be immediately invoked.
 
 ```js
   // no arguments
@@ -34,6 +33,9 @@ arguments:
 
   // exploded api view
   p = particl(({ get, set, need, provide, ... }) => {
+    ...
+  });
+  p = particl({ prop1: 'value1' }, ({ get, set, need, provide, ... }) => {
     ...
   });
 ```

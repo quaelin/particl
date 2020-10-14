@@ -407,6 +407,12 @@
         firstArg(api);
       } else {
         api.set(...args);
+        if (args.length > 1) {
+          const secondArg = args[1];
+          if (isFunction(secondArg)) {
+            secondArg(api);
+          }
+        }
       }
     }
 
