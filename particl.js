@@ -411,6 +411,14 @@
           const secondArg = args[1];
           if (isFunction(secondArg)) {
             secondArg(api);
+          } else {
+            api.mixin(secondArg);
+            if (args.length > 2) {
+              const thirdArg = args[2];
+              if (isFunction(thirdArg)) {
+                thirdArg(api);
+              }
+            }
           }
         }
       }

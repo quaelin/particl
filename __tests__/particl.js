@@ -28,3 +28,19 @@ test('particl(object, func) initializes properties AND explodes the api', () => 
   expect(arg).toBe(p);
   expect(innerProps).toEqual([1, true]);
 });
+
+test('particl(object1, object2, func) inits props AND allows API mixin', () => {
+  const initialProps = { a: 1, b: true };
+  let myFuncCalled = false;
+  const mixin = { myFunc: () => { myFuncCalled = true; } };
+  let arg;
+  let innerProps;
+  const p = particl(initialProps, mixin, (api) => {
+    arg = api;
+    innerProps = api.get(['a', 'b']);
+    api.myFunc();
+  });
+  expect(arg).toBe(p);
+  expect(innerProps).toEqual([1, true]);
+  expect(myFuncCalled).toBe(true);
+});
