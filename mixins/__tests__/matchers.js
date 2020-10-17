@@ -65,12 +65,12 @@ describe('mixins/matchers', () => {
 
   describe('onceMatch()', () => {
     describe('onceMatch(key, isMatch)', () => {
-      test('resolves immediately if a Match property is already set', async () => {
+      test('resolves immediately if a matching property is already set', async () => {
         const val = await onceMatch('celcius', isCelcius);
         expect(val).toBe(0);
       });
 
-      test('if inMatch prop set, it waits for one', async () => {
+      test('if non-matching prop set, it waits for matching one', async () => {
         set('celcius', 'chilly');
         setTimeout(() => { set('celcius', 5); }, 1);
         const celcius = await onceMatch('celcius', isCelcius);
@@ -79,7 +79,7 @@ describe('mixins/matchers', () => {
     });
 
     describe('onceMatch(key, isMatch, callback)', () => {
-      test('invokes callback if a Match property is already set', (done) => {
+      test('invokes callback if a matching property is already set', (done) => {
         onceMatch('celcius', isCelcius, (val) => {
           try {
             expect(val).toBe(0);
@@ -90,7 +90,7 @@ describe('mixins/matchers', () => {
         });
       });
 
-      test('waits to invoke callback if inMatch prop is set', (done) => {
+      test('waits to invoke callback if non-matching prop is set', (done) => {
         set('celcius', 'dank');
         onceMatch('celcius', isCelcius, (val) => {
           try {
