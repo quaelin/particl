@@ -401,24 +401,37 @@
       },
     };
 
+    const loadMixins = (mixins) => {
+      for (let i = 0; i < mixins.length; i += 1) {
+        const item = mixins[i];
+        if (isObject(item)) {
+          api.mixin(item);
+        } else if (isFunction(item)) {
+          api.mixin(item(api));
+        }
+      }
+    };
+
     if (args.length) {
       const firstArg = args[0];
-      if (isFunction(firstArg)) {
+      if (isArray(firstArg)) {
+        loadMixins(firstArg);
+      } else if (isObject(firstArg)) {
+        api.set(firstArg);
+      } else if (isFunction(firstArg)) {
         firstArg(api);
-      } else {
-        api.set(...args);
-        if (args.length > 1) {
-          const secondArg = args[1];
-          if (isFunction(secondArg)) {
-            secondArg(api);
-          } else {
-            api.mixin(secondArg);
-            if (args.length > 2) {
-              const thirdArg = args[2];
-              if (isFunction(thirdArg)) {
-                thirdArg(api);
-              }
-            }
+      }
+      if (args.length > 1) {
+        const secondArg = args[1];
+        if (isArray(secondArg)) {
+          loadMixins(secondArg);
+        } else if (isFunction(secondArg)) {
+          secondArg(api);
+        }
+        if (args.length > 2) {
+          const thirdArg = args[2];
+          if (isFunction(thirdArg)) {
+            thirdArg(api);
           }
         }
       }

@@ -29,18 +29,28 @@ test('particl(object, func) initializes properties AND explodes the api', () => 
   expect(innerProps).toEqual([1, true]);
 });
 
-test('particl(object1, object2, func) inits props AND allows API mixin', () => {
+test('particl(object, array, func) inits props, does API mixins, and explodes', () => {
   const initialProps = { a: 1, b: true };
-  let myFuncCalled = false;
-  const mixin = { myFunc: () => { myFuncCalled = true; } };
+  let myFunc1Called = false;
+  let myFunc2Value;
+  const mixins = [
+    // Object style
+    { myFunc1: () => { myFunc1Called = true; } },
+
+    // Function style
+    (api) => ({ myFunc2: () => { myFunc2Value = api.get('a') + 1; } }),
+  ];
   let arg;
   let innerProps;
-  const p = particl(initialProps, mixin, (api) => {
+  const p = particl(initialProps, mixins, (api) => {
     arg = api;
     innerProps = api.get(['a', 'b']);
-    api.myFunc();
+    api.myFunc1();
   });
   expect(arg).toBe(p);
   expect(innerProps).toEqual([1, true]);
-  expect(myFuncCalled).toBe(true);
+  expect(myFunc1Called).toBe(true);
+  expect(myFunc2Value).toBe(undefined);
+  p.myFunc2();
+  expect(myFunc2Value).toBe(2);
 });
