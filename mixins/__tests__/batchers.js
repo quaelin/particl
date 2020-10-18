@@ -35,21 +35,21 @@ describe('mixins/batchers', () => {
 
     describe('nextBatch(key, options, cb)', () => {
       test('invokes callback once enough matching items accumulate', (done) => {
-        setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
-        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 10);
-        setTimeout(() => { newEvent({ type: 'important' }); }, 20);
         nextBatch('event', { size: 2, isMatch: isImportant }, (batch) => {
           expect(batch).toEqual([{ type: 'important', val: 1 }, { type: 'important' }]);
           done();
         });
+        newEvent({ type: 'important', val: 1 });
+        newEvent({ type: 'unimportant' });
+        newEvent({ type: 'important' });
       });
 
       test('invokes callback once the timeout expires, as long as there are ANY items', (done) => {
-        setTimeout(() => { newEvent({ type: 'whatever', val: 1 }); }, 0);
-        nextBatch('event', { timeout: 100 }, (batch) => {
+        nextBatch('event', { size: 2, timeout: 100 }, (batch) => {
           expect(batch).toEqual([{ type: 'whatever', val: 1 }]);
           done();
         });
+        newEvent({ type: 'whatever', val: 1 });
       });
 
       test('returns the api object, for chaining', () => {
@@ -62,13 +62,13 @@ describe('mixins/batchers', () => {
     describe('onBatch(key, options, callback)', () => {
       test('invokes callback whevener enough items accumulate, OR the timeout elapses', (done) => {
         const batches = [];
-        setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
-        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 10);
-        setTimeout(() => { newEvent({ type: 'important' }); }, 20);
-        setTimeout(() => { newEvent({ type: 'important', val: 8 }); }, 50);
         onBatch('event', { size: 2, timeout: 100, isMatch: isImportant }, (batch) => {
           batches.push(batch);
         });
+        newEvent({ type: 'important', val: 1 });
+        newEvent({ type: 'unimportant' });
+        newEvent({ type: 'important' });
+        newEvent({ type: 'important', val: 8 });
         setTimeout(() => {
           expect(batches).toEqual([
             [
@@ -78,7 +78,7 @@ describe('mixins/batchers', () => {
             [{ type: 'important', val: 8 }],
           ]);
           done();
-        }, 800);
+        }, 500);
       });
 
       test('returns the api object, for chaining', () => {
