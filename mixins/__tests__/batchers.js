@@ -19,15 +19,17 @@ describe('mixins/batchers', () => {
   describe('nextBatch()', () => {
     describe('nextBatch(key, options)', () => {
       test('resolves once enough matching items accumulate', async () => {
-        setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
-        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 10);
-        setTimeout(() => { newEvent({ type: 'important' }); }, 20);
+        setImmediate(() => {
+          newEvent({ type: 'important', val: 1 });
+          newEvent({ type: 'unimportant' });
+          newEvent({ type: 'important' });
+        });
         const batch = await nextBatch('event', { size: 2, isMatch: isImportant });
         expect(batch).toEqual([{ type: 'important', val: 1 }, { type: 'important' }]);
       });
 
       test('resolves once the timeout expires, as long as there are ANY items', async () => {
-        setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
+        setImmediate(() => { newEvent({ type: 'important', val: 1 }); });
         const batch = await nextBatch('event', { timeout: 1000, isMatch: isImportant });
         expect(batch).toEqual([{ type: 'important', val: 1 }]);
       });
@@ -46,10 +48,10 @@ describe('mixins/batchers', () => {
 
       test('invokes callback once the timeout expires, as long as there are ANY items', (done) => {
         nextBatch('event', { size: 2, timeout: 100 }, (batch) => {
-          expect(batch).toEqual([{ type: 'whatever', val: 1 }]);
+          expect(batch).toEqual([{ answer: 42 }]);
           done();
         });
-        newEvent({ type: 'whatever', val: 1 });
+        newEvent({ answer: 42 }); // only sending one event, but waiting for 2
       });
 
       test('returns the api object, for chaining', () => {
@@ -122,28 +124,32 @@ describe('mixins/batchers', () => {
   describe('onceBatch()', () => {
     describe('onceBatch(key, options)', () => {
       test('resolves as soon as a single matching batch has happened', async () => {
-        setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
-        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 10);
-        setTimeout(() => { newEvent({ type: 'important' }); }, 20);
-        setTimeout(() => { newEvent({ type: 'important', val: 8 }); }, 50);
+        setImmediate(() => {
+          newEvent({ type: 'important', id: 1 });
+          newEvent({ type: 'unimportant' });
+          newEvent({ type: 'important', id: 3 }); // this completes a batch
+          newEvent({ type: 'important', id: 8 });
+        });
         const batch = await onceBatch('event', { size: 2, isMatch: isImportant });
         expect(batch).toEqual([
-          { type: 'important', val: 1 },
-          { type: 'important' },
+          { type: 'important', id: 1 },
+          { type: 'important', id: 3 },
         ]);
       });
     });
 
     describe('onceBatch(key, options, cb)', () => {
-      test('invokes callback as sson as a single matching batch has happened', (done) => {
-        setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
-        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 10);
-        setTimeout(() => { newEvent({ type: 'important' }); }, 20);
-        setTimeout(() => { newEvent({ type: 'important', val: 8 }); }, 50);
+      test('invokes callback as soon as a single matching batch has happened', (done) => {
+        setImmediate(() => {
+          newEvent({ type: 'important', id: 1 });
+          newEvent({ type: 'unimportant' });
+          newEvent({ type: 'important', id: 3 }); // this completes a batch
+          newEvent({ type: 'important', id: 8 });
+        });
         onceBatch('event', { size: 2, isMatch: isImportant }, (batch) => {
           expect(batch).toEqual([
-            { type: 'important', val: 1 },
-            { type: 'important' },
+            { type: 'important', id: 1 },
+            { type: 'important', id: 3 },
           ]);
           done();
         });
