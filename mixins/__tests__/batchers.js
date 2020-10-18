@@ -62,7 +62,7 @@ describe('mixins/batchers', () => {
     describe('onBatch(key, options, callback)', () => {
       test('invokes callback whevener enough items accumulate, OR the timeout elapses', (done) => {
         const batches = [];
-        onBatch('event', { size: 2, timeout: 100, isMatch: isImportant }, (batch) => {
+        onBatch('event', { size: 2, timeout: 10, isMatch: isImportant }, (batch) => {
           batches.push(batch);
         });
         newEvent({ type: 'important', val: 1 });
