@@ -14,6 +14,7 @@ thorough tests.
   even ones that would be cumbersome to implement clearly with just Promises.
 
 ## Install
+
 ```
   npm install particl
 ```
@@ -22,7 +23,9 @@ thorough tests.
 
 ### Constructor
 
-You can call the `particl()` constructor without arguments, but it's also possible to pass in initial properties as an object, and/or a callback function which will be immediately invoked.
+You can call the `particl()` constructor without arguments, but it's also
+possible to pass in initial properties as an object, and/or a callback function
+which will be immediately invoked.
 
 ```js
   // no arguments

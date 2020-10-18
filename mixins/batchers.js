@@ -1,3 +1,17 @@
+// Provides `nextBatch()`, `onBatch()` and `onceBatch()` notifiers that each
+// take an `options` object that describe how to group individual property
+// changes into batches.
+//
+// options:
+// {
+//   size: <max batch size> (default 1),
+//   isMatch: <optional test func to filter with>,
+//   timeout: <ms>
+// }
+//
+// The `timeout` option, if set, ensures that incomplete batches will still be
+// notified eventually.
+
 module.exports = (api) => {
   const { get, has, off, on } = api;
 

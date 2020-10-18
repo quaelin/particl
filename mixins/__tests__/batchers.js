@@ -78,7 +78,7 @@ describe('mixins/batchers', () => {
             [{ type: 'important', val: 8 }],
           ]);
           done();
-        }, 400);
+        }, 500);
       });
 
       test('returns the api object, for chaining', () => {

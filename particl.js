@@ -49,7 +49,7 @@
     return obj;
   }
 
-  // Property getter
+  // Internal property getter
   function get(nucleus, keyOrList) {
     const values = [];
     const result = { values };
@@ -83,7 +83,7 @@
   // Used to detect listener recursion; a given object may only appear once.
   const objStack = [];
 
-  // Property setter
+  // Internal property setter
   function set(nucleus, key, value) {
     const { props, listeners } = nucleus;
     const listenersCopy = [].concat(listeners);
