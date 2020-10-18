@@ -63,8 +63,8 @@ describe('mixins/batchers', () => {
       test('invokes callback whevener enough items accumulate, OR the timeout elapses', (done) => {
         const batches = [];
         setTimeout(() => { newEvent({ type: 'important', val: 1 }); }, 0);
-        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 5);
-        setTimeout(() => { newEvent({ type: 'important' }); }, 10);
+        setTimeout(() => { newEvent({ type: 'unimportant' }); }, 10);
+        setTimeout(() => { newEvent({ type: 'important' }); }, 20);
         setTimeout(() => { newEvent({ type: 'important', val: 8 }); }, 50);
         onBatch('event', { size: 2, timeout: 100, isMatch: isImportant }, (batch) => {
           batches.push(batch);
@@ -78,7 +78,7 @@ describe('mixins/batchers', () => {
             [{ type: 'important', val: 8 }],
           ]);
           done();
-        }, 500);
+        }, 800);
       });
 
       test('returns the api object, for chaining', () => {
