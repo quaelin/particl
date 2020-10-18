@@ -11,10 +11,10 @@ module.exports = (api) => {
     on(key, listener);
   };
 
-  const ext = {
-    nextMatch(key, isMatch, func) {
-      if (func) {
-        waitForMatch(key, isMatch, func);
+  return {
+    nextMatch(key, isMatch, /* optional */ cb) {
+      if (cb) {
+        waitForMatch(key, isMatch, cb);
         return api;
       }
       return new Promise((resolve) => {
@@ -22,22 +22,22 @@ module.exports = (api) => {
       });
     },
 
-    onMatch(key, isMatch, func) {
+    onMatch(key, isMatch, cb) {
       return on(key, (val) => {
         if (isMatch(val)) {
-          func(val);
+          cb(val);
         }
       });
     },
 
-    onceMatch(key, isMatch, func) {
+    onceMatch(key, isMatch, /* optional */ cb) {
       const current = get(key);
       const match = isMatch(current);
-      if (func) {
+      if (cb) {
         if (match) {
-          func(current);
+          cb(current);
         } else {
-          waitForMatch(key, isMatch, func);
+          waitForMatch(key, isMatch, cb);
         }
         return api;
       }
@@ -47,6 +47,4 @@ module.exports = (api) => {
       });
     },
   };
-
-  return ext;
 };

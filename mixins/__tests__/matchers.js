@@ -25,7 +25,7 @@ describe('mixins/matchers', () => {
       });
     });
 
-    describe('nextMatch(key, isMatch, callback)', () => {
+    describe('nextMatch(key, isMatch, cb)', () => {
       test('invokes the callback next time the prop changes to a value isMatch returns truthy for', (done) => {
         setTimeout(() => { set('celcius', 'too hot'); }, 0);
         setTimeout(() => { set('celcius', 25); }, 1);
@@ -37,6 +37,10 @@ describe('mixins/matchers', () => {
             done(ex);
           }
         });
+      });
+
+      test('returns the api object, for chaining', () => {
+        expect(nextMatch('celcius', isCelcius, () => {})).toBe(p);
       });
     });
   });
