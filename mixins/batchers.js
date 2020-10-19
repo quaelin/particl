@@ -44,16 +44,16 @@ module.exports = (api) => {
       const fullBatch = items.length >= size;
       const pastTime = timeout && (batchStart + timeout < now);
       const anyItems = items.length >= 1;
-      if (batchesRemaining && (fullBatch || (pastTime && anyItems))) {
+      const callingBack = batchesRemaining && (fullBatch || (pastTime && anyItems));
+      if (callingBack) {
         this.items = [];
         this.batchesRemaining -= 1;
-        if (batchTimer) clearTimeout(batchTimer);
-        // eslint-disable-next-line no-use-before-define
-        if (this.batchesRemaining) this.resetTimer();
         this.cb(items);
-        return true;
       }
-      return false;
+      if (batchTimer) clearTimeout(batchTimer);
+      // eslint-disable-next-line no-use-before-define
+      if (this.batchesRemaining) this.resetTimer();
+      return callingBack;
     }
 
     resetTimer() {
