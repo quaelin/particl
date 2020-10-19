@@ -10,7 +10,7 @@
 // }
 //
 // The `timeout` option, if set, ensures that incomplete batches will still be
-// notified eventually.
+// notified eventually, so it is generally recommended.
 
 module.exports = (api) => {
   const { get, has, off, on } = api;
@@ -51,7 +51,6 @@ module.exports = (api) => {
         this.cb(items);
       }
       if (batchTimer) clearTimeout(batchTimer);
-      // eslint-disable-next-line no-use-before-define
       if (this.batchesRemaining) this.resetTimer();
       return callingBack;
     }
