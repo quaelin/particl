@@ -31,29 +31,24 @@ module.exports = (api) => {
     // for.
     onMatch(key, isMatch, cb) {
       return on(key, (val) => {
-        if (isMatch(val)) {
-          cb(val);
-        }
+        if (isMatch(val)) cb(val);
       });
     },
 
     // Notify as soon as `key` is set to a value that `isMatch` returns truthy
     // for.
     onceMatch(key, isMatch, /* optional */ cb) {
-      const current = get(key);
-      const match = isMatch(current);
+      const resolver = (resolve) => {
+        const current = get(key);
+        const match = isMatch(current);
+        if (match) resolve(current);
+        else waitForMatch(key, isMatch, resolve);
+      };
       if (cb) {
-        if (match) {
-          cb(current);
-        } else {
-          waitForMatch(key, isMatch, cb);
-        }
+        resolver(cb);
         return api;
       }
-      if (match) return Promise.resolve(current);
-      return new Promise((resolve) => {
-        waitForMatch(key, isMatch, resolve);
-      });
+      return new Promise(resolver);
     },
   };
 };
