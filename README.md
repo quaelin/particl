@@ -45,7 +45,7 @@ which will be immediately invoked.
 
 The exploded api form simply makes the entire instance API available as the
 first argument to the callback, so that you can easily select the portion of the
-api you want to interact with using object destructuring.
+api you want to interact with using argument destructuring.
 
 So the following are identical:
 
@@ -91,7 +91,7 @@ all properties that have been set.
 
 ```js
   if (p.has('skills')) {
-    console.log('What "p" brings to the table:', a.keys());
+    console.log('What "p" brings to the table:', p.keys());
   }
 ```
 

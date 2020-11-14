@@ -69,7 +69,7 @@
     return result;
   }
 
-  // Helper to remove an exausted listener from the listeners array
+  // Helper to remove an exhausted listener from the listeners array
   function removeListener(listeners) {
     for (let i = listeners.length - 1; i >= 0; i -= 1) {
       // There should only be ONE exhausted listener.
