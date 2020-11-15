@@ -216,3 +216,54 @@ individual methods you want with argument destructuring:
     ...
   });
 ```
+
+### Extending functionality with mixins
+
+The particl constructor provides a way to incorporate mixins that extend the
+particl's api.  Use it like this:
+
+```js
+  particl(
+    [ ...mixins ],
+    ({ on, set, get, need, customMethodFromMixin, ... }) => {
+
+    }
+  );
+```
+
+Some helpful mixins are included in the [mixins/ directory](./mixins).  Fox
+example, use the `customListeners` mixin to create customized method names for
+specific properties:
+
+```js
+  const customListenersMixin = require('particl/mixins/customListeners');
+
+  particl(
+    [customListenersMixin('event')],
+    ({ onEvent, onceEvent, setEvent }) => {
+      // This is a convenient shorthand for on('event', (evt) => { ... })
+      onEvent((evt) => {
+        console.log('Something happened:', evt);
+      });
+    }
+  );
+```
+
+Or use the `matchers` mixin to add _validation_ to your property listeners:
+
+```js
+  const matchersMixin = require('particl/mixins/matchers');
+
+  particl(
+    [matchersMixin],
+    async ({ onceMatch, set }) => {
+      set('authStatus', { authenticated: false });
+
+      ...
+
+      const isAuthenticated = (authStatus) => (authStatus?.authenticated);
+      await onceMatch('authStatus', isAuthenticated);
+      // We only get here once the user is authenticated
+    }
+  );
+```
