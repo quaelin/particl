@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1](https://github.com/quaelin/particl/compare/v0.7.0...v0.7.1)
+
+ - Correct version number in particl.js
+
 ## [0.7.0](https://github.com/quaelin/particl/compare/v0.6.2...v0.7.0)
 
  - Add support for extensibility via _mixins_

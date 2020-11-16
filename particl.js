@@ -6,7 +6,7 @@
 //
 (function () {
   const name = 'particl';
-  const VERSION = '0.6.2';
+  const VERSION = '0.7.1';
 
   const ObjProto = Object.prototype;
   const hasOwn = ObjProto.hasOwnProperty;
