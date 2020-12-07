@@ -1,4 +1,4 @@
-const particl = require('../..');
+const particl = require('../../particl');
 const customListenersMixin = require('../customListeners');
 
 describe('mixins/customListeners', () => {
