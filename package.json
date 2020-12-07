@@ -18,16 +18,20 @@
     "type": "git",
     "url": "git://github.com/quaelin/particl"
   },
-  "main": "./particl.js",
+  "main": "./lib/particl.js",
   "engines": {
     "node": ">=0.10"
   },
   "scripts": {
+    "prepublish": "babel src --out-dir lib",
     "pretest": "eslint .",
     "test": "jest --verbose"
   },
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
