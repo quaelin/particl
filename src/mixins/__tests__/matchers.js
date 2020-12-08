@@ -1,4 +1,4 @@
-const particl = require('../..');
+const particl = require('../../particl');
 const matchersMixin = require('../matchers');
 
 describe('mixins/matchers', () => {

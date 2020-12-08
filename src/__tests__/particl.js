@@ -1,4 +1,4 @@
-const particl = require('..');
+const particl = require('../particl');
 
 test("there's a VERSION string", () => {
   expect(typeof particl.VERSION).toBe('string');

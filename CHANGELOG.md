@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0](https://github.com/quaelin/particl/compare/v0.7.1...v0.8.0)
+
+ - Use babel to transpile for older browser support
+
 ## [0.7.1](https://github.com/quaelin/particl/compare/v0.7.0...v0.7.1)
 
  - Correct version number in particl.js

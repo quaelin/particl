@@ -1,6 +1,6 @@
 {
   "name": "particl",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "author": {
     "name": "Chris Campbell",
     "url": "https://github.com/quaelin"
@@ -18,16 +18,21 @@
     "type": "git",
     "url": "git://github.com/quaelin/particl"
   },
-  "main": "./particl.js",
+  "main": "./dist/particl.js",
   "engines": {
-    "node": ">=0.10"
+    "node": ">=8"
   },
   "scripts": {
+    "prepublishOnly": "babel src --out-dir dist --ignore __tests__/*",
     "pretest": "eslint .",
-    "test": "jest --verbose"
+    "test": "jest --verbose src"
   },
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "core-js": "^3.8.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",

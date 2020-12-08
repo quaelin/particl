@@ -1,4 +1,4 @@
-const particl = require('..');
+const particl = require('../particl');
 
 describe('.get()', () => {
   let p;
