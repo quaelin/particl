@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1](https://github.com/quaelin/particl/compare/v0.8.0...v0.8.1)
+
+ - Fix VERSION string in src
+
 ## [0.8.0](https://github.com/quaelin/particl/compare/v0.7.1...v0.8.0)
 
  - Use babel to transpile for older browser support
