@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.8.3](https://github.com/quaelin/particl/compare/v0.8.2...v0.8.3)
+
+ - Declare core-js as a dependency
+
 ## [0.8.2](https://github.com/quaelin/particl/compare/v0.8.1...v0.8.2)
 
  - Preserve camel-casing of event names in customListeners mixin

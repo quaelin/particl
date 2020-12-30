@@ -9,7 +9,7 @@ thorough tests.
 
 ## Features
 
-* Small, no dependencies
+* Small, depending only on core-js for older browser support.
 * Allows you to _clearly_ code using a variety of async control flow patterns,
   even ones that would be cumbersome to implement clearly with just Promises.
 

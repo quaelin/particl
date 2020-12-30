@@ -1,6 +1,6 @@
 {
   "name": "particl",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "author": {
     "name": "Chris Campbell",
     "url": "https://github.com/quaelin"
@@ -28,6 +28,9 @@
     "test": "jest --verbose src"
   },
   "license": "MIT",
+  "dependencies": {
+    "core-js": ">= 3"
+  },
   "devDependencies": {
     "@babel/cli": "^7.12.8",
     "@babel/core": "^7.12.9",
