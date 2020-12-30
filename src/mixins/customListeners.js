@@ -2,7 +2,7 @@
 // instance, if initialized with "event" it will create `getEvent()`,
 // `hasEvent()`, `needEvent()`, `nextEvent()`, `onEvent()`, etc.
 
-const toProperCase = (str) => `${str.charAt(0).toUpperCase()}${str.substr(1).toLowerCase()}`;
+const toProperCase = (str) => `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
 
 module.exports = (key) => {
   const Key = toProperCase(key);
