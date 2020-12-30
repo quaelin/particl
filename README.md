@@ -231,12 +231,12 @@ particl's api.  Use it like this:
   );
 ```
 
-Some helpful mixins are included in the [mixins/ directory](./mixins).  Fox
+Some helpful mixins are included in the [mixins/ directory](./src/mixins).  Fox
 example, use the `customListeners` mixin to create customized method names for
 specific properties:
 
 ```js
-  const customListenersMixin = require('particl/mixins/customListeners');
+  const customListenersMixin = require('particl/dist/mixins/customListeners');
 
   particl(
     [customListenersMixin('event')],
@@ -252,7 +252,7 @@ specific properties:
 Or use the `matchers` mixin to add _validation_ to your property listeners:
 
 ```js
-  const matchersMixin = require('particl/mixins/matchers');
+  const matchersMixin = require('particl/dist/mixins/matchers');
 
   particl(
     [matchersMixin],
